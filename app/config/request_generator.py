@@ -12,6 +12,17 @@ class APIVersion(Enum):
     V1 = "v1"
     V2 = "v2"
 
+class EndpointCategory(Enum):
+    CRYPTOCURRENCY = "cryptocurrency"
+    EXCHANGE = "exchange"
+    GLOBAL_METRICS = "global-metrics"
+    TOOLS = "tools"
+    BLOCKCHAIN = "blockchain"
+    FIAT = "fiat"
+    PARTNERS = "partners"
+    KEY = "key"
+    CONTENT = "content"
+
 class RequestGenerator:
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None, 
                  header: Optional[Dict[str, str]] = None) -> None:
@@ -22,16 +33,17 @@ class RequestGenerator:
         self.session: requests.Session = requests.Session()
         self.session.headers.update({
             'Accepts': 'application/json',
+            'Accept-Encoding': 'gzip, deflate', # increase fetching data
             'X-CMC_PRO_API_KEY': self.api_key
         })
 
         if header:
             self.session.headers.update(header)
 
-    def get(self, endpoint: str, version: APIVersion = APIVersion.V1,
+    def get(self, category: EndpointCategory, path: str, version: APIVersion = APIVersion.V1,
             params: Optional[Dict[str, Union[str, int, float]]] = None) -> Dict[str, Any]:
         """Send a GET request to the API with versioning."""
-        url: str = f"{self.base_url}/{version.value}/{endpoint}"
+        url: str = f"{self.base_url}/{version.value}/{category.value}/{path}"
         print(f"url = {url}")
         try:
             response: requests.Response = self.session.get(url, params=params)
@@ -40,10 +52,10 @@ class RequestGenerator:
         except requests.exceptions.RequestException as e:
             return {"error": str(e)}
 
-    def post(self, endpoint: str, version: APIVersion = APIVersion.V1,
+    def post(self, category: str, path: str, version: APIVersion = APIVersion.V1,
              data: Optional[Dict[str, Any]] = None, json_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Send a POST request to the API with versioning."""
-        url: str = f"{self.base_url}/{version.value}/{endpoint}"
+        url: str = f"{self.base_url}/{version.value}/{category}/{path}"
         try:
             response: requests.Response = self.session.post(url, data=data, json=json_data)
             response.raise_for_status()
