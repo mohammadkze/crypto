@@ -1,10 +1,10 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 class Settings:
-    API_URL = os.getenv("API_URL", "https://sandbox-api.coinmarketcap.com")
+    API_URL = os.getenv("API_URL")
     API_KEY = os.getenv("API_KEY")
 
 settings = Settings()

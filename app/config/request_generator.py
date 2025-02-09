@@ -4,13 +4,15 @@ import json
 from typing import Optional, Dict, Any, Union
 from enum import Enum
 from dotenv import load_dotenv
+from .settings import settings
 
 # Load environment variables from .env file
-load_dotenv()
+# load_dotenv()
 
 class APIVersion(Enum):
     V1 = "v1"
     V2 = "v2"
+    V3 = "v3"
 
 class EndpointCategory(Enum):
     CRYPTOCURRENCY = "cryptocurrency"
@@ -22,13 +24,14 @@ class EndpointCategory(Enum):
     PARTNERS = "partners"
     KEY = "key"
     CONTENT = "content"
+    FEAR_AND_GREED = "fear-and-greed"
 
 class RequestGenerator:
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None, 
                  header: Optional[Dict[str, str]] = None) -> None:
         """Initialize with base URL and API Key from environment variables."""
-        self.base_url: str = base_url or os.getenv("API_URL", "")
-        self.api_key: str = api_key or os.getenv("API_KEY", "")
+        self.base_url: str = base_url or settings.API_URL
+        self.api_key: str = api_key or settings.API_KEY
         
         self.session: requests.Session = requests.Session()
         self.session.headers.update({

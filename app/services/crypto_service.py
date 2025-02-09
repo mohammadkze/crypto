@@ -9,14 +9,26 @@ class CryptoService(RequestGenerator):
         """Inherit from RequestGenerator to handle cryptocurrency-related API requests."""
         super().__init__(base_url, api_key)
 
-    def get_latest_listings(self, category: EndpointCategory, path: str, request: CryptoListRequest, version: APIVersion = APIVersion.V1) -> CryptoResponse:
+    def get_latest_listings(self, category: EndpointCategory, path: str, request: CryptoListRequest, version: APIVersion = APIVersion.V1) -> any:
         """Fetch the latest cryptocurrency listings with request model."""
         start_time = time.time()  # Start timer
         response = self.get(category, path, version, params=request)
 
         # Convert to Pydantic model
-        crypto_response = CryptoResponse(**response)
+        # crypto_response = CryptoResponse(**response)
         end_time = time.time()  # Start time
         print(f"fetch {end_time - start_time}")
         # Return a dictionary (which is JSON serializable)
-        return crypto_response.model_dump()
+        # return crypto_response.model_dump()
+        return response
+    
+    def get_fear_and_greed(self, category: EndpointCategory, path: str, request: CryptoListRequest, version: APIVersion = APIVersion.V3) -> any:
+        start_time = time.time()  # Start timer
+        response = self.get(category, path, version, params=request)
+
+        # Convert to Pydantic model
+        # crypto_response = CryptoResponse(**response)
+        end_time = time.time()  # Start time
+        print(f"fetch {end_time - start_time}")
+        # Return a dictionary (which is JSON serializable)
+        return response
